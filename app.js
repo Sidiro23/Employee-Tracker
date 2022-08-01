@@ -74,7 +74,7 @@ function selections(){
   })
 };
 
-//function and quiry to view all employees in the database
+//function and query to view all employees in the db
 
 function viewEmployees(){
   let query = 'SELECT * FROM employee';
@@ -85,3 +85,50 @@ function viewEmployees(){
     selections();
  })
 };
+
+//function and query to view all departments in the db
+
+function viewDepartments(){
+  let query = 'SELECT * FROM department';
+  connection.query(query, function(err,res){
+    if (err) throw err;
+    console.table('All Departments:, res');
+    selections();
+  })
+};
+
+//function and query to view all roles in the db
+
+function viewRoles(){
+  let query = 'SELECT * FROM role';
+  connection.query(query, function(err,res){
+    if (err) throw err;
+    console.table('All Roles:', res);
+    selections();
+ })
+};
+
+//function to add an employee to the db
+
+function addEmployee(){
+  connection.query('Select * FROM role', function(err,res){
+    if (err) throw (err);
+    inquirer.prompt([
+      {
+        name:'first_name',
+        type:'input',
+        message: "What is the employee's first name?"
+      },
+      {
+        name:'last_name',
+        type:'input',
+        message: "What is the employee's last name?"
+      },
+      {
+        name: 'manager_id',
+        type: 'input',
+        message: "What is the employee's manager's ID?"
+      }
+    ])
+  })
+}
