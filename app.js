@@ -6,21 +6,27 @@ require('dotenv').config();
 //connect to db
 const db = mysql.createConnection(
   
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+    
     {
+      
+   
+    
+      
       host: 'localhost',
-      dialect: 'mysql',
-      port: 3301
+      
+      port: 3306,
+      user: 'root',
+    password: process.env.DB_PASSWORD,
+    database: 'employees_db',
     
   },
   
 );
 db.connect(function(err){
   if (err) throw err;
+  console.log(`Connected to the employees_db database.`)
   selections();
-})
+});
 console.log(`Connected to the employees_db database.`)
 //make selections with inquirer
 function selections(){
@@ -40,7 +46,7 @@ function selections(){
       'Exit'
     ]
   }).then(function(reply){
-    switch (reply.action){
+    switch (reply.selection){
       case 'View all employees':
         viewEmployees();
         break;
@@ -72,7 +78,7 @@ function selections(){
         break;                  
     }
   })
-};
+}
 
 //function and query to view all employees in the db
 
@@ -92,7 +98,7 @@ function viewDepartments(){
   let query = 'SELECT * FROM department';
   db.query(query, function(err,res){
     if (err) throw err;
-    console.table('All Departments:, res');
+    console.table('All Departments:', res);
     selections();
   })
 };
@@ -249,6 +255,43 @@ function addRole(){
 
 //update role in db
 function updateRole(){
+  db.query('SELECT * FROM role', (err, res) => {
+  if (err) throw err;
+ 
+  inquirer.prompt([
+  {
+    name: "last_name",
+    type: "list",
+    choices: function () {
+    let last_name = [];
+    for (let i = 0; i < res.length; i++) {
+     last_name.push(res[i].last_name);
+    }
+      return last_name;
+  },
+    message: "What is the employee's last name? ",
+  },
+  {
+    name: "role_id",
+    type: "list",
+    message: "What is the employee's new title? ",
+    choices: viewRoles()
+    },
+  ]).then(function (reply) {
+  let role_id = viewRoles().indexOf(reply.role) + 1;
+  db.query("UPDATE role SET WHERE ?",
+  {
+    last_name: reply.last_name,
+    role_id: role_id
+  },
+        
+  function (err) {
+  if (err)throw err;
+  console.table(reply);
+  selections();
+   });
+  });
+});
 
 };
 
