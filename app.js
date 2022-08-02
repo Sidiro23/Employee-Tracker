@@ -17,7 +17,7 @@ const db = mysql.createConnection(
   },
   
 );
-connection.connect(function(err){
+db.connect(function(err){
   if (err) throw err;
   selections();
 })
@@ -78,7 +78,7 @@ function selections(){
 
 function viewEmployees(){
   let query = 'SELECT * FROM employee';
-  connection.query(query, function(err,res){
+  db.query(query, function(err,res){
     if (err) throw err;
     console.log(res.length + 'employees found!');
     console.table('All Employees:', res);
@@ -90,7 +90,7 @@ function viewEmployees(){
 
 function viewDepartments(){
   let query = 'SELECT * FROM department';
-  connection.query(query, function(err,res){
+  db.query(query, function(err,res){
     if (err) throw err;
     console.table('All Departments:, res');
     selections();
@@ -101,7 +101,7 @@ function viewDepartments(){
 
 function viewRoles(){
   let query = 'SELECT * FROM role';
-  connection.query(query, function(err,res){
+  db.query(query, function(err,res){
     if (err) throw err;
     console.table('All Roles:', res);
     selections();
@@ -111,7 +111,7 @@ function viewRoles(){
 //function to add an employee to the db
 
 function addEmployee(){
-  connection.query('Select * FROM role', function(err,res){
+  db.query('Select * FROM role', function(err,res){
     if (err) throw (err);
     inquirer.prompt([
       {
@@ -149,7 +149,7 @@ function addEmployee(){
           console.log(role_id)
         }
       }
-      connection.query(
+      db.query(
         'INSERT INTO employee SET ?',
         {
           first_name:reply.first_name,
@@ -176,14 +176,14 @@ function addDept(){
       message: 'Which department would you like to add?'
     }
   ]).then(function (reply){
-    connection.query(
+    db.query(
       'INSERT INTO department SET ?',
       {
         name: reply.newDepartment
       }
     );
     let query = 'SELECT * FROM department';
-    connect.query(query, function(err, res){
+    db.query(query, function(err, res){
       if(err) throw err;
       console.log('Your department has been added!');
       console.table('All Departments:', res);
@@ -197,7 +197,7 @@ function addDept(){
 
 //function to add role to the db
 function addRole(){
-  connection,query('SELECT * FROM department', function(err, res){
+  db.query('SELECT * FROM department', function(err, res){
     if (err) throw err;
 
     inquirer.prompt([
@@ -229,7 +229,7 @@ function addRole(){
           department_id = res[d].id;
         }
       }
-      connection.query(
+      db.query(
         'INSERT INTO role SET ?',
         {
           title: reply.new_role,
@@ -257,5 +257,5 @@ function delEmployee(){};
 
 // terminate app
 function exitApp(){
-  connection.end();
+  db.end();
 };

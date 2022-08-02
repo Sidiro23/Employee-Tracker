@@ -1,18 +1,19 @@
 USE employees_db;
+SET FOREIGN_KEY_CHECKS=0;
 
 INSERT INTO department (name)
 VALUES
-(IT),
-(Finance),
-(HR),
-(Sales),
-(Marketing),
-(R&D),
-(Operations)
+('IT'),
+('Finance'),
+('HR'),
+('Sales'),
+('Marketing'),
+('R&D'),
+('Operations');
 
-INSERT INTO role (title,salary, department_id)
+INSERT INTO role (title, salary, department_id)
 VALUES
-('Software Engineer', 100000, 1),
+('Software Engineer', 90000, 1),
 ('Accountant', 65000, 2),
 ('HR Manager', 75000, 3),
 ('Sales Rep', 45000, 4),
