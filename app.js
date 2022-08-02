@@ -128,7 +128,134 @@ function addEmployee(){
         name: 'manager_id',
         type: 'input',
         message: "What is the employee's manager's ID?"
+      },
+      {
+        name: 'role',
+        type : 'list',
+        choices: function(){
+          let roleArray = [];
+          for (let i=0; i <res.length; i++){
+            roleArray.push(res[i].title);
+          }
+          return roleArray;
+        },
+        message: "What is this employee's role?"
       }
-    ])
+    ]).then(function(reply) {
+      let role_id;
+      for (let r =0; r<res.length; r++){
+        if (res[r].title == reply.role){
+          role_id = res[r].id;
+          console.log(role_id)
+        }
+      }
+      connection.query(
+        'INSERT INTO employee SET ?',
+        {
+          first_name:reply.first_name,
+          last_name:reply.last_name,
+          manager_id: reply.manager_id,
+          role_id: role_id,
+        },
+        function(err){
+          if (err) throw err;
+          console.log('Employee has been added!');
+          selections();
+        }
+      )
+    })
   })
-}
+};
+
+//function to add department to db
+function addDept(){
+  inquirer.prompt([
+    {
+      name: 'newDepartment',
+      type:'input',
+      message: 'Which department would you like to add?'
+    }
+  ]).then(function (reply){
+    connection.query(
+      'INSERT INTO department SET ?',
+      {
+        name: reply.newDepartment
+      }
+    );
+    let query = 'SELECT * FROM department';
+    connect.query(query, function(err, res){
+      if(err) throw err;
+      console.log('Your department has been added!');
+      console.table('All Departments:', res);
+      selections();
+    })
+    
+
+    
+  })
+};
+
+//function to add role to the db
+function addRole(){
+  connection,query('SELECT * FROM department', function(err, res){
+    if (err) throw err;
+
+    inquirer.prompt([
+      {
+        name: 'new_role',
+        type: 'input',
+        message: 'What new role would you like to add?'
+      },
+      {
+        name: 'salary',
+        type: 'input',
+        message: 'What is the salary for this role?'
+      },
+      {
+        name:'Department',
+        type: 'list',
+        choices: function(){
+          let deptArray = [];
+          for (let i=0; i < res.length; i++){
+            deptArray.push(res[i].name);
+          }
+          return deptArray;
+        },
+      }
+    ]).then(function (reply){
+      let department_id;
+      for (let d=0; d<res.length; d++){
+        if (res[d].name == reply.Department){
+          department_id = res[d].id;
+        }
+      }
+      connection.query(
+        'INSERT INTO role SET ?',
+        {
+          title: reply.new_role,
+          salary: reply.salary,
+          department_id: department_id
+        },
+        function (err, res){
+          if(err) throw err;
+          console.log('New role has been added!');
+          console.table('All Roles:', res);
+          selections();
+        }
+      )
+    })
+  })
+};
+
+//update role in db
+function updateRole(){
+
+};
+
+//delete an employee
+function delEmployee(){};
+
+// terminate app
+function exitApp(){
+  connection.end();
+};
