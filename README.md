@@ -1,5 +1,6 @@
 # Employee-Tracker
 ### Video Walkthrough:
+https://drive.google.com/file/d/1P7SABgzIEfI6v-pdnuNJ-yEkmeijOsge/view
 
 
   ## Badges
